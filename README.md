@@ -121,6 +121,7 @@ We believe that great developers are not bound to a specific technology set, but
 
 Best of luck and looking forward to what you are able to accomplish! 🙂
 
-# 🗒️ Notes
+## 🗒️ Notes
 
 - Added Github actions to run tests on every push
+- Installed [`@biomejs/biome`](https://www.npmjs.com/package/@biomejs/biome) for linting and formatting
