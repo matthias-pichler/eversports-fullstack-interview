@@ -1,6 +1,6 @@
-import express, { Request, Response } from "express";
-import memberships from "../../data/memberships.json";
+import express, { type Request, type Response } from "express";
 import membershipPeriods from "../../data/membership-periods.json";
+import memberships from "../../data/memberships.json";
 
 const router = express.Router();
 
