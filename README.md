@@ -120,3 +120,7 @@ We believe that great developers are not bound to a specific technology set, but
 - Jest - <https://jestjs.io/>
 
 Best of luck and looking forward to what you are able to accomplish! 🙂
+
+# 🗒️ Notes
+
+- Added Github actions to run tests on every push
