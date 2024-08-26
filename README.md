@@ -133,5 +133,5 @@ Best of luck and looking forward to what you are able to accomplish! 🙂
 
 ## TODOs
 
-- Decide what to do about missing periods in the `GET /memberships` endpoint
-- Decide what to do about `user` vs `userId` in `Membership`
+- [ ] Decide what to do about missing periods in the `GET /memberships` endpoint
+- [ ] Decide what to do about `user` vs `userId` in `Membership`
