@@ -43,6 +43,45 @@ describe("list memberships", () => {
 		}
 	});
 
+	it("includes a 'uuid' property in every membership", async () => {
+		const { body } = await request.get("/").expect(StatusCodes.OK);
+
+		for (const entry of body) {
+			expect(entry).toHaveProperty(
+				"membership",
+				expect.objectContaining({
+					uuid: expect.any(String),
+				}),
+			);
+		}
+	});
+
+	it("includes a 'id' property in every membership", async () => {
+		const { body } = await request.get("/").expect(StatusCodes.OK);
+
+		for (const entry of body) {
+			expect(entry).toHaveProperty(
+				"membership",
+				expect.objectContaining({
+					id: expect.any(Number),
+				}),
+			);
+		}
+	});
+
+	it("includes a 'assignedBy' property in every membership", async () => {
+		const { body } = await request.get("/").expect(StatusCodes.OK);
+
+		for (const entry of body) {
+			expect(entry).toHaveProperty(
+				"membership",
+				expect.objectContaining({
+					assignedBy: expect.any(String),
+				}),
+			);
+		}
+	});
+
 	it.failing(
 		"includes a 'user' property in every membership according to the README",
 		async () => {
