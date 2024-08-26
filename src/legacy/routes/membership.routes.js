@@ -37,11 +37,8 @@ router.post("/", (req, res) => {
 				return res
 					.status(400)
 					.json({ message: "billingPeriodsMoreThan10Years" });
-			} else {
-				return res
-					.status(400)
-					.json({ message: "billingPeriodsLessThan3Years" });
 			}
+			return res.status(400).json({ message: "billingPeriodsLessThan3Years" });
 		}
 	} else {
 		return res.status(400).json({ message: "invalidBillingPeriods" });
