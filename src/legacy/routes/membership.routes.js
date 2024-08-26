@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require("uuid");
  * create a new membership
  */
 router.post("/", (req, res) => {
+	// userId should be taken from the (authenticated) request
 	const userId = 2000;
 
 	if (!req.body.name || !req.body.recurringPrice) {
@@ -28,6 +29,7 @@ router.post("/", (req, res) => {
 				.status(400)
 				.json({ message: "billingPeriodsMoreThan12Months" });
 		}
+		// FIXME: this should access req.body.billingPeriods
 		if (req.billingPeriods < 6) {
 			return res.status(400).json({ message: "billingPeriodsLessThan6Months" });
 		}
@@ -38,6 +40,7 @@ router.post("/", (req, res) => {
 					.status(400)
 					.json({ message: "billingPeriodsMoreThan10Years" });
 			}
+			// FIXME: this should be in an outer else block
 			return res.status(400).json({ message: "billingPeriodsLessThan3Years" });
 		}
 	} else {
@@ -79,6 +82,7 @@ router.post("/", (req, res) => {
 	};
 	memberships.push(newMembership);
 
+	// this shadows the global membershipPeriods variable, thus no updates are persisted
 	const membershipPeriods = [];
 	let periodStart = validFrom;
 	for (let i = 0; i < req.body.billingPeriods; i++) {

@@ -130,6 +130,12 @@ Best of luck and looking forward to what you are able to accomplish! 🙂
 - Discovered that the `GET /memberships` endpoint did not return the periods of the memberships. Added a failing test for this.
 - Discovered README states `user` in `Membership`, data uses `userId`
 - Discovered that `paymentMethod` in `Membership` can also be `null`
+- Discovered that list memberships also returns undocumented properties `id`, `uuid`, `assignedBy`
+- Discovered that `assignedBy` is not set in create membership
+- Discovered that create membership only allows `billingInterval` to be `monthly` or `yearly` but also uses `weekly` in the code
+- `validUntil` calculation is unclear ... should `2023-01-01` + 12 months be `2024-01-01` (as in code) or `2023-12-31` (as in sample data)?
+- should `validUntil` and `validFrom` be inclusive or exclusive?
+- should `validUntil` and `validFrom` be dates or datetimes?
 
 ## TODOs
 
