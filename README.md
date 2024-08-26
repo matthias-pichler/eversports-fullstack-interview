@@ -125,3 +125,13 @@ Best of luck and looking forward to what you are able to accomplish! 🙂
 
 - Added Github actions to run tests on every push
 - Installed [`@biomejs/biome`](https://www.npmjs.com/package/@biomejs/biome) for linting and formatting
+- API has no authentication, out of scope for this exercise
+- Added [`http-status-codes`](https://www.npmjs.com/package/http-status-codes) for better handling of HTTP status codes
+- Discovered that the `GET /memberships` endpoint did not return the periods of the memberships. Added a failing test for this.
+- Discovered README states `user` in `Membership`, data uses `userId`
+- Discovered that `paymentMethod` in `Membership` can also be `null`
+
+## TODOs
+
+- Decide what to do about missing periods in the `GET /memberships` endpoint
+- Decide what to do about `user` vs `userId` in `Membership`

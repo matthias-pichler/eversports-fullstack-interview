@@ -111,8 +111,10 @@ router.post("/", (req, res) => {
  */
 router.get("/", (req, res) => {
 	const rows = [];
+	// this performs an in memory join, should be done in the database (if possible)
 	for (const membership of memberships) {
 		const periods = membershipPeriods.filter(
+			// FIXME: membershipId does not exist in membershipPeriods, it's called membership
 			(p) => p.membershipId === membership.id,
 		);
 		rows.push({ membership, periods });
