@@ -11,11 +11,12 @@ The team also started an initiative in this quarter to modernize the codebase by
 
 ### Domain: Memberships
 
-A `Membership` allows a user to participate at any class the a specific sport venue within a specific timespan. Within this timespan, the membership is divided into `MembershipPeriods`. The MembershipPeriods represent billing periods that the user has to pay for.
+A `Membership` allows a user to participate in any class at a specific sport venue within a specific timespan. Within this timespan, the membership is divided into `MembershipPeriods`. The `MembershipPeriods` represent billing periods that the user has to pay for.
 
-For the scope of this exercise, the domain model was reduced to a reasonable size. 
+For the scope of this exercise, the domain model was reduced to a reasonable size.
 
 #### Entity: Membership
+
 ```ts
 interface Membership {
     name: string // name of the membership
@@ -31,6 +32,7 @@ interface Membership {
 ```
 
 #### Entity: MembershipPeriod
+
 ```ts
 interface MembershipPeriod {
     membership: number // membership the period is attached to
@@ -39,7 +41,6 @@ interface MembershipPeriod {
     state: string
 }
 ```
-
 
 ## Task 1 - Modernization of the membership codebase (backend only)
 
@@ -69,19 +70,19 @@ When refactoring, you should consider the following aspects:
 > [!NOTE]
 > We provided you with an clean express.js server to run the example. For your implementations, feel free to use any library out there to help you with your solution. If you decide to choose another JavaScript/TypeScript http library/framework (eg. NestJs) update the run config described below if needed, and ensure that the routes of the described actions don't change.
 
-
 ## Task 2 - Design an architecture to provide a membership export (conception only)
 
-The team discovered that users are interested in **exporting all of their memberships** from the system to run their own analysis once a month as a **CSV file**. Because the creation of the export file would take some seconds, the team decided to go for an **asynchronous process** for creating the file and sending it via email. The process will be triggered by an API call of the user. 
+The team discovered that users are interested in **exporting all of their memberships** from the system to run their own analysis once a month as a **CSV file**. Because the creation of the export file would take some seconds, the team decided to go for an **asynchronous process** for creating the file and sending it via email. The process will be triggered by an API call of the user.
 
-Your task is to **map out a diagram** that visualizes the asynchronous process from receiving the request to sending the export file to the user. This diagram should include all software / infrastructure components that will be needed to make the process as stable and scalable as possible. 
+Your task is to **map out a diagram** that visualizes the asynchronous process from receiving the request to sending the export file to the user. This diagram should include all software / infrastructure components that will be needed to make the process as stable and scalable as possible.
 
 Because the team has other things to work on too, this task is timeboxed to **1 hour** and you should share the architecture diagram as a **PDF file**.
 
 > [!NOTE]
-> Feel free to use any tool out there to create your diagram. If you are not familiar with such a tool, you can use www.draw.io. 
+> Feel free to use any tool out there to create your diagram. If you are not familiar with such a tool, you can use <www.draw.io>.
 
 ## Repository Intro
+
 In this repository you will find an plain express.js server the exposes API endpoints to consumers. For this exercise, the API endpoints are not protected.
 
 ### Installation
@@ -97,6 +98,7 @@ npm run start
 ```
 
 ### Run test
+
 ```sh
 npm run test
 ```
@@ -107,14 +109,14 @@ npm run test
 - You should put your code in GitHub or GitLab/Bitbucket and send us the link to your repository where we can find the source code. That means no ZIP files.
 - Please make sure to include any additional instructions in a readme in case you change something about the compilation or execution of the codebase.
 
-## 💻 Technologies:
+## 💻 Technologies
 
 We believe that great developers are not bound to a specific technology set, but no matter their toolbox they are able to think critically about how to structure and design good code. For this exercise, we provided just a small and simple set of tools to run the a application and tests. Feel free to use any library out there to help you with your implementation.
 
 ### Pre-installed
 
-- Express - https://expressjs.com/
-- TypeScript - https://www.typescriptlang.org/
-- Jest - https://jestjs.io/
+- Express - <https://expressjs.com/>
+- TypeScript - <https://www.typescriptlang.org/>
+- Jest - <https://jestjs.io/>
 
 Best of luck and looking forward to what you are able to accomplish! 🙂
