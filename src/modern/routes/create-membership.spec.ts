@@ -312,176 +312,176 @@ describe("create new membership", () => {
 					});
 			});
 		});
+	});
 
-		describe("validUntil", () => {
-			it("correctly rolls over dates to next year for monthly billing", async () => {
-				const body = {
+	describe("validUntil", () => {
+		it("correctly rolls over dates to next year for monthly billing", async () => {
+			const body = {
+				name: "Platinum Plan",
+				recurringPrice: 150.0,
+				validFrom: "2023-05-01",
+				state: "active",
+				paymentMethod: "credit card",
+				billingInterval: "monthly",
+				billingPeriods: 12,
+			};
+
+			await request
+				.post("/")
+				.send(body)
+				.expect(StatusCodes.CREATED)
+				.expect((res) => {
+					expect(res.body.membership).toEqual(
+						expect.objectContaining({
+							validUntil: "2024-05-01",
+						}),
+					);
+				});
+		});
+
+		it("correctly rolls over dates to next year for yearly billing", async () => {
+			const body = {
+				name: "Platinum Plan",
+				recurringPrice: 150.0,
+				validFrom: "2023-05-01",
+				state: "active",
+				paymentMethod: "credit card",
+				billingInterval: "yearly",
+				billingPeriods: 3,
+			};
+
+			await request
+				.post("/")
+				.send(body)
+				.expect(StatusCodes.CREATED)
+				.expect((res) => {
+					expect(res.body.membership).toEqual(
+						expect.objectContaining({
+							validUntil: "2026-05-01",
+						}),
+					);
+				});
+		});
+
+		it("correctly rolls over dates to next month for weekly billing", async () => {
+			const body = {
+				name: "Platinum Plan",
+				recurringPrice: 150.0,
+				validFrom: "2023-05-01",
+				state: "active",
+				paymentMethod: "credit card",
+				billingInterval: "weekly",
+				billingPeriods: 5,
+			};
+
+			await request
+				.post("/")
+				.send(body)
+				.expect(StatusCodes.CREATED)
+				.expect((res) => {
+					expect(res.body.membership).toEqual(
+						expect.objectContaining({
+							validUntil: "2023-06-05",
+						}),
+					);
+				});
+		});
+	});
+
+	describe("state", () => {
+		it("creates a pending membership if validFrom is in the future", async () => {
+			const validFrom = new Date();
+			validFrom.setFullYear(validFrom.getFullYear() + 1);
+
+			await request
+				.post("/")
+				.send({
+					name: "Platinum Plan",
+					recurringPrice: 150.0,
+					validFrom: validFrom.toISOString(),
+					state: "active",
+					paymentMethod: "credit card",
+					billingInterval: "monthly",
+					billingPeriods: 12,
+				})
+				.expect(StatusCodes.CREATED)
+				.expect((res) => {
+					expect(res.body.membership).toEqual(
+						expect.objectContaining({
+							state: "pending",
+						}),
+					);
+				});
+		});
+
+		it("creates an expired membership if validUntil is in the past", async () => {
+			const validFrom = new Date();
+			validFrom.setFullYear(validFrom.getFullYear() - 1);
+
+			await request
+				.post("/")
+				.send({
+					name: "Platinum Plan",
+					recurringPrice: 150.0,
+					validFrom: validFrom.toISOString(),
+					state: "active",
+					paymentMethod: "credit card",
+					billingInterval: "monthly",
+					billingPeriods: 6,
+				})
+				.expect(StatusCodes.CREATED)
+				.expect((res) => {
+					expect(res.body.membership).toEqual(
+						expect.objectContaining({
+							state: "expired",
+						}),
+					);
+				});
+		});
+
+		it("creates an active membership if validFrom < now < validUntil", async () => {
+			const validFrom = new Date();
+			validFrom.setFullYear(validFrom.getFullYear() - 1);
+
+			await request
+				.post("/")
+				.send({
+					name: "Platinum Plan",
+					recurringPrice: 150.0,
+					validFrom: validFrom.toISOString(),
+					state: "active",
+					paymentMethod: "credit card",
+					billingInterval: "yearly",
+					billingPeriods: 3,
+				})
+				.expect(StatusCodes.CREATED)
+				.expect((res) => {
+					expect(res.body.membership).toEqual(
+						expect.objectContaining({
+							state: "active",
+						}),
+					);
+				});
+		});
+	});
+
+	describe("membershipPeriods", () => {
+		it("creates the same number of membership periods as billingPeriods", async () => {
+			await request
+				.post("/")
+				.send({
 					name: "Platinum Plan",
 					recurringPrice: 150.0,
 					validFrom: "2023-05-01",
 					state: "active",
 					paymentMethod: "credit card",
 					billingInterval: "monthly",
-					billingPeriods: 12,
-				};
-
-				await request
-					.post("/")
-					.send(body)
-					.expect(StatusCodes.CREATED)
-					.expect((res) => {
-						expect(res.body.membership).toEqual(
-							expect.objectContaining({
-								validUntil: "2024-05-01",
-							}),
-						);
-					});
-			});
-
-			it("correctly rolls over dates to next year for yearly billing", async () => {
-				const body = {
-					name: "Platinum Plan",
-					recurringPrice: 150.0,
-					validFrom: "2023-05-01",
-					state: "active",
-					paymentMethod: "credit card",
-					billingInterval: "yearly",
-					billingPeriods: 3,
-				};
-
-				await request
-					.post("/")
-					.send(body)
-					.expect(StatusCodes.CREATED)
-					.expect((res) => {
-						expect(res.body.membership).toEqual(
-							expect.objectContaining({
-								validUntil: "2026-05-01",
-							}),
-						);
-					});
-			});
-
-			it("correctly rolls over dates to next month for weekly billing", async () => {
-				const body = {
-					name: "Platinum Plan",
-					recurringPrice: 150.0,
-					validFrom: "2023-05-01",
-					state: "active",
-					paymentMethod: "credit card",
-					billingInterval: "weekly",
-					billingPeriods: 5,
-				};
-
-				await request
-					.post("/")
-					.send(body)
-					.expect(StatusCodes.CREATED)
-					.expect((res) => {
-						expect(res.body.membership).toEqual(
-							expect.objectContaining({
-								validUntil: "2023-06-05",
-							}),
-						);
-					});
-			});
-		});
-
-		describe("state", () => {
-			it("creates a pending membership if validFrom is in the future", async () => {
-				const validFrom = new Date();
-				validFrom.setFullYear(validFrom.getFullYear() + 1);
-
-				await request
-					.post("/")
-					.send({
-						name: "Platinum Plan",
-						recurringPrice: 150.0,
-						validFrom: validFrom.toISOString(),
-						state: "active",
-						paymentMethod: "credit card",
-						billingInterval: "monthly",
-						billingPeriods: 12,
-					})
-					.expect(StatusCodes.CREATED)
-					.expect((res) => {
-						expect(res.body.membership).toEqual(
-							expect.objectContaining({
-								state: "pending",
-							}),
-						);
-					});
-			});
-
-			it("creates an expired membership if validUntil is in the past", async () => {
-				const validFrom = new Date();
-				validFrom.setFullYear(validFrom.getFullYear() - 1);
-
-				await request
-					.post("/")
-					.send({
-						name: "Platinum Plan",
-						recurringPrice: 150.0,
-						validFrom: validFrom.toISOString(),
-						state: "active",
-						paymentMethod: "credit card",
-						billingInterval: "monthly",
-						billingPeriods: 6,
-					})
-					.expect(StatusCodes.CREATED)
-					.expect((res) => {
-						expect(res.body.membership).toEqual(
-							expect.objectContaining({
-								state: "expired",
-							}),
-						);
-					});
-			});
-
-			it("creates an active membership if validFrom < now < validUntil", async () => {
-				const validFrom = new Date();
-				validFrom.setFullYear(validFrom.getFullYear() - 1);
-
-				await request
-					.post("/")
-					.send({
-						name: "Platinum Plan",
-						recurringPrice: 150.0,
-						validFrom: validFrom.toISOString(),
-						state: "active",
-						paymentMethod: "credit card",
-						billingInterval: "yearly",
-						billingPeriods: 3,
-					})
-					.expect(StatusCodes.CREATED)
-					.expect((res) => {
-						expect(res.body.membership).toEqual(
-							expect.objectContaining({
-								state: "active",
-							}),
-						);
-					});
-			});
-		});
-
-		describe("membershipPeriods", () => {
-			it("creates the same number of membership periods as billingPeriods", async () => {
-				await request
-					.post("/")
-					.send({
-						name: "Platinum Plan",
-						recurringPrice: 150.0,
-						validFrom: "2023-05-01",
-						state: "active",
-						paymentMethod: "credit card",
-						billingInterval: "monthly",
-						billingPeriods: 6,
-					})
-					.expect(StatusCodes.CREATED)
-					.expect((res) => {
-						expect(res.body.membershipPeriods).toHaveLength(6);
-					});
-			});
+					billingPeriods: 6,
+				})
+				.expect(StatusCodes.CREATED)
+				.expect((res) => {
+					expect(res.body.membershipPeriods).toHaveLength(6);
+				});
 		});
 	});
 });

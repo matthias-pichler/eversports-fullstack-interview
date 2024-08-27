@@ -163,5 +163,5 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - Installed [`@biomejs/biome`](https://www.npmjs.com/package/@biomejs/biome) for linting and formatting
 - API has no authentication, out of scope for this exercise
 - Added [`http-status-codes`](https://www.npmjs.com/package/http-status-codes) for better handling of HTTP status codes
-- Added [`date-fns`](https://www.npmjs.com/package/date-fns) for better date handling
+- Added [`date-fns`](https://www.npmjs.com/package/date-fns) for better date formatting, though I had to keep the weird setters to achieve the same result as in the legacy code
 - realistically input validation should be done using `zod` or json schema but I left it out for simplicity
