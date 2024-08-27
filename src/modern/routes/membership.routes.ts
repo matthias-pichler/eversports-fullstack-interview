@@ -2,10 +2,10 @@ import express, { type Request, type Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import membershipPeriods from "../../data/membership-periods.json";
 import memberships from "../../data/memberships.json";
-import { JsonMembershipRepository } from "../domain/memberships/repositories/json-membership-repository";
-import type { IMembershipRepository } from "../domain/memberships/repositories/membership-repository";
-import { CreateMembership } from "../domain/memberships/usecases/create-membership";
-import { ListMemberships } from "../domain/memberships/usecases/list-memberships";
+import { JsonMembershipRepository } from "../memberships/repositories/json-membership-repository";
+import type { IMembershipRepository } from "../memberships/repositories/membership-repository";
+import { CreateMembership } from "../memberships/usecases/create-membership";
+import { ListMemberships } from "../memberships/usecases/list-memberships";
 import { ValidationError } from "../errors";
 
 const USER_ID = 2000;
