@@ -145,7 +145,7 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 
 ## 🤔 Assumptions
 
-- as seen in the data `validUntil` & `validFrom` in `Membership` and `start` & `end` in `MembershipPeriod` are dates and not datetimes. Although timezones should probably be considered.
+- as seen in the data `validUntil` & `validFrom` in `Membership` and `start` & `end` in `MembershipPeriod` are dates and not date-times. Although timezones should probably be considered. Newly created memberships would show a date-time and test data a date. The new API will always show a date.
 
 ## 🗒️ Notes
 

@@ -332,7 +332,7 @@ describe("create new membership", () => {
 					.expect((res) => {
 						expect(res.body.membership).toEqual(
 							expect.objectContaining({
-								validUntil: "2024-05-01T00:00:00.000Z",
+								validUntil: "2024-05-01",
 							}),
 						);
 					});
@@ -356,7 +356,7 @@ describe("create new membership", () => {
 					.expect((res) => {
 						expect(res.body.membership).toEqual(
 							expect.objectContaining({
-								validUntil: "2026-05-01T00:00:00.000Z",
+								validUntil: "2026-05-01",
 							}),
 						);
 					});
@@ -380,7 +380,7 @@ describe("create new membership", () => {
 					.expect((res) => {
 						expect(res.body.membership).toEqual(
 							expect.objectContaining({
-								validUntil: "2023-06-05T00:00:00.000Z",
+								validUntil: "2023-06-05",
 							}),
 						);
 					});

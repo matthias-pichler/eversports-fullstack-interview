@@ -9,6 +9,90 @@ app.use("/", routes);
 const request = supertest(app);
 
 describe("list memberships", () => {
+	it("returns the test memberships", async () => {
+		const response = await request.get("/").expect(StatusCodes.OK);
+		expect(response.body).toEqual([
+			{
+				membership: {
+					id: 1,
+					uuid: "123e4567-e89b-12d3-a456-426614174000",
+					name: "Platinum Plan",
+					userId: 2000,
+					recurringPrice: 150,
+					validFrom: "2023-01-01",
+					validUntil: "2023-12-31",
+					state: "active",
+					paymentMethod: "credit card",
+					billingInterval: "monthly",
+					billingPeriods: 12,
+					assignedBy: "Admin",
+				},
+				periods: [
+					{
+						id: 1,
+						uuid: "123e4567-e89b-12d3-a456-426614174000",
+						membership: 1,
+						start: "2023-01-01",
+						end: "2023-01-31",
+						state: "issued",
+					},
+				],
+			},
+			{
+				membership: {
+					id: 2,
+					uuid: "123e4567-e89b-12d3-a456-426614174001",
+					name: "Gold Plan",
+					userId: 2000,
+					recurringPrice: 100,
+					validFrom: "2023-02-01",
+					validUntil: "2023-12-31",
+					state: "active",
+					paymentMethod: "cash",
+					billingInterval: "monthly",
+					billingPeriods: 2,
+					assignedBy: "Admin",
+				},
+				periods: [
+					{
+						id: 2,
+						uuid: "123e4567-e89b-12d3-a456-426614174001",
+						membership: 2,
+						start: "2023-02-01",
+						end: "2023-02-28",
+						state: "issued",
+					},
+				],
+			},
+			{
+				membership: {
+					id: 3,
+					uuid: "123e4567-e89b-12d3-a456-426614174002",
+					name: "Gold Plan",
+					userId: 2000,
+					recurringPrice: 100,
+					validFrom: "2023-02-01",
+					validUntil: "2023-12-31",
+					state: "active",
+					paymentMethod: null,
+					billingInterval: "monthly",
+					billingPeriods: 6,
+					assignedBy: "Admin",
+				},
+				periods: [
+					{
+						id: 3,
+						uuid: "123e4567-e89b-12d3-a456-426614174002",
+						membership: 3,
+						start: "2023-03-01",
+						end: "2023-03-31",
+						state: "issued",
+					},
+				],
+			},
+		]);
+	});
+
 	it("returns a list of memberships", async () => {
 		const response = await request.get("/").expect(StatusCodes.OK);
 		expect(response.body).toEqual(expect.any(Array));
