@@ -1,6 +1,6 @@
 import type { ErrorRequestHandler } from "express";
-import { ValidationError } from "./modern/errors";
 import { StatusCodes } from "http-status-codes";
+import { ValidationError } from "./modern/errors";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 	console.error(err.stack);

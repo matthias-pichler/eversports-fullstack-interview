@@ -1,8 +1,11 @@
-import type { IMembership, MembershipState } from "../entities/membership";
-import type { CreateMembershipPeriodInput, IMembershipRepository } from "../repositories/membership-repository";
-import { v4 as uuidv4 } from 'uuid';
 import * as dfns from "date-fns";
+import { v4 as uuidv4 } from "uuid";
 import { ValidationError } from "../../../errors";
+import type { IMembership, MembershipState } from "../entities/membership";
+import type {
+	CreateMembershipPeriodInput,
+	IMembershipRepository,
+} from "../repositories/membership-repository";
 
 // should validUntil be in the input?
 export type CreateMembershipInput = Omit<
@@ -76,7 +79,7 @@ export class CreateMembership {
 			"validFrom" | "billingInterval" | "billingPeriods"
 		>,
 	): CreateMembershipPeriodInput[] => {
-    const periods: CreateMembershipPeriodInput[] = [];
+		const periods: CreateMembershipPeriodInput[] = [];
 		let periodStart = input.validFrom;
 
 		for (let i = 0; i < input.billingPeriods; i++) {
@@ -101,7 +104,7 @@ export class CreateMembership {
 			periodStart = validUntil;
 		}
 
-    return periods;
+		return periods;
 	};
 
 	private calculateState = (

@@ -1,3 +1,4 @@
+import { formatISO } from "date-fns";
 import {
 	type BillingInterval,
 	type IMembership,
@@ -14,7 +15,6 @@ import type {
 	CreateMembershipInput,
 	IMembershipRepository,
 } from "./membership-repository";
-import { formatISO } from "date-fns";
 
 /**
  * Deal with JSON files for memberships

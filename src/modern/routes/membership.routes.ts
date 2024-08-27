@@ -4,8 +4,8 @@ import membershipPeriods from "../../data/membership-periods.json";
 import memberships from "../../data/memberships.json";
 import { JsonMembershipRepository } from "../domain/memberships/repositories/json-membership-repository";
 import type { IMembershipRepository } from "../domain/memberships/repositories/membership-repository";
-import { ListMemberships } from "../domain/memberships/usecases/list-memberships";
 import { CreateMembership } from "../domain/memberships/usecases/create-membership";
+import { ListMemberships } from "../domain/memberships/usecases/list-memberships";
 import { ValidationError } from "../errors";
 
 const USER_ID = 2000;
