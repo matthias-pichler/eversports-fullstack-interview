@@ -1,6 +1,6 @@
 import * as dfns from "date-fns";
 import { v4 as uuidv4 } from "uuid";
-import { ValidationError } from "../../../errors";
+import { ValidationError } from "../../errors";
 import type { IMembership, MembershipState } from "../entities/membership";
 import type {
 	CreateMembershipPeriodInput,
