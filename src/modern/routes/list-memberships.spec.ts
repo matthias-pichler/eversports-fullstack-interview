@@ -1,11 +1,29 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import supertest from "supertest";
-import routes from "./membership.routes";
+import membershipPeriods from "../../data/membership-periods.json";
+import memberships from "../../data/memberships.json";
+import { JsonMembershipRepository } from "../memberships/repositories/json-membership-repository";
+import { CreateMembership } from "../memberships/usecases/create-membership";
+import { ListMemberships } from "../memberships/usecases/list-memberships";
+import { MembershipRouter } from "./membership.routes";
+
+const membershipRepository = new JsonMembershipRepository({
+	memberships: memberships,
+	membershipPeriods: membershipPeriods,
+});
+
+const listMemberships = new ListMemberships(membershipRepository);
+const createMembership = new CreateMembership(membershipRepository);
+
+const membershipRouter = new MembershipRouter({
+	listMemberships,
+	createMembership,
+});
 
 const app = express();
 app.use(express.json());
-app.use("/", routes);
+app.use("/", membershipRouter.router);
 const request = supertest(app);
 
 describe("list memberships", () => {
