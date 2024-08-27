@@ -143,7 +143,8 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - list memberships also returns `id`, `uuid`, `assignedBy` undocumented properties
 - `assignedBy` is not set in create membership
 - `billingInterval` in `Membership` can also be `weekly` but is not allowed in create membership
-- `billingPeriods` with a monthly interval is not correctly checked for the minimum of 6 months
+- `billingPeriods` with a `monthly` interval is not correctly checked for the minimum of 6 months
+- `billingPeriods` with a `yearly` interval is not correctly checked for the range of 3-10 years
 
 ## 🤔 Assumptions
 
@@ -156,12 +157,14 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - I assume that allowing yearly memberships with a runtime of 4-10 years (which were previously forbidden) adds new functionality and does not break existing functionality.
 - I assume that the `billingInterval: weekly` was previously accidentally forbidden. Allowing it in the new API adds new functionality and does not break existing functionality.
 - I assume that yearly memberships with a runtime of less than 3 years were previously accidentally allowed. The data did not show any such memberships. I assume the frontend already validates this so the application won't break.
+- Month increments don't simply increase the month by 1. I kept the same behavior as in the legacy code.
 
 ## 🗒️ Notes
 
-- Added Github actions to run tests on every push
+- I went with a onion style architecture to show one way of structuring the code and separating concerns. Things like hexagonal architecture could also be used, but require more boilerplate code.
+- Added Github actions to run tests, typecheck and linter on every push
 - Installed [`@biomejs/biome`](https://www.npmjs.com/package/@biomejs/biome) for linting and formatting
 - API has no authentication, out of scope for this exercise
 - Added [`http-status-codes`](https://www.npmjs.com/package/http-status-codes) for better handling of HTTP status codes
-- Added [`date-fns`](https://www.npmjs.com/package/date-fns) for better date formatting, though I had to keep the weird setters to achieve the same result as in the legacy code
+- Added [`date-fns`](https://www.npmjs.com/package/date-fns) for better date handling
 - realistically input validation should be done using `zod` or json schema but I left it out for simplicity

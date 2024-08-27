@@ -1,6 +1,8 @@
 import type { IMembership } from "../entities/membership";
 import type { IMembershipRepository } from "../repositories/membership-repository";
 
+// test for this use case could be added if needed
+
 export class ListMemberships {
 	private readonly repository: IMembershipRepository;
 
