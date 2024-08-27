@@ -44,6 +44,7 @@ router.post("/", (req, res) => {
 			return res.status(400).json({ message: "billingPeriodsLessThan3Years" });
 		}
 	} else {
+		// technically this would be an invalid billingInterval
 		return res.status(400).json({ message: "invalidBillingPeriods" });
 	}
 
