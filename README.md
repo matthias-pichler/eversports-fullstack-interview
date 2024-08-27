@@ -135,6 +135,8 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 
 1. check with API consumers about usage patterns and if they are relying on undocumented behavior
 
+1. A blue/green deployment or feature flags could be used to slowly roll out changes to the API
+
 - `GET /memberships` does not return the periods of the memberships. Added a failing test for this.
 - README states `user` in `Membership`, data uses `userId`
 - `paymentMethod` in `Membership` can also be `null`
@@ -146,6 +148,14 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 ## 🤔 Assumptions
 
 - as seen in the data `validUntil` & `validFrom` in `Membership` and `start` & `end` in `MembershipPeriod` are dates and not date-times. Although timezones should probably be considered. Newly created memberships would show a date-time and test data a date. The new API will always show a date.
+- I assume that the fact that `GET /legacy/memberships` did not return the periods was not an issue as they weren't used before but for future use they will be needed. Therefore the addition does not break any existing functionality.
+- It is unclear wether `validFrom: '2023-01-01'` + 12 months should be `2024-01-01` (as seen in code) or `2023-12-31` (as seen in data). `2024-01-01` was chosen here.
+- All membership periods are created as "planned" even if they might lie in the past. Assuming that code here is correct.
+- I assume that the undocumented properties `id`, `uuid`, `assignedBy` have to be returned in the new API as well as they are in use by the frontend.
+- since the legacy API returned `userId` instead of `user` I assume that the new API should return `userId` as well because the frontend is already using it.
+- I assume that allowing yearly memberships with a runtime of 4-10 years (which were previously forbidden) adds new functionality and does not break existing functionality.
+- I assume that the `billingInterval: weekly` was previously accidentally forbidden. Allowing it in the new API adds new functionality and does not break existing functionality.
+- I assume that yearly memberships with a runtime of less than 3 years were previously accidentally allowed. The data did not show any such memberships. I assume the frontend already validates this so the application won't break.
 
 ## 🗒️ Notes
 
@@ -154,14 +164,4 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - API has no authentication, out of scope for this exercise
 - Added [`http-status-codes`](https://www.npmjs.com/package/http-status-codes) for better handling of HTTP status codes
 - Added [`date-fns`](https://www.npmjs.com/package/date-fns) for better date handling
-
-
-- `validUntil` calculation is unclear ... should `2023-01-01` + 12 months be `2024-01-01` (as in code) or `2023-12-31` (as in sample data)?
-- should `validUntil` and `validFrom` be inclusive or exclusive?
-- should `validUntil` and `validFrom` be dates or datetimes?
 - realistically input validation should be done using `zod` or json schema but I left it out for simplicity
-
-## TODOs
-
-- [ ] Decide what to do about missing periods in the `GET /memberships` endpoint
-- [ ] Decide what to do about `user` vs `userId` in `Membership`
