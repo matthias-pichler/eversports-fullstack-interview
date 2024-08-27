@@ -60,7 +60,7 @@ export class JsonMembershipRepository implements IMembershipRepository {
 
 		const newPeriods: IMembershipPeriod[] = periods.map((period, i) => ({
 			...period,
-			id: this.membershipPeriods.length + i + 1,
+			id: i + 1,
 			membership: membershipId,
 		}));
 
