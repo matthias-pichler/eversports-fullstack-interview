@@ -145,8 +145,7 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 
 ## 🤔 Assumptions
 
-- as seen in the data `validUntil` & `validFrom` in `Membership` are dates and not datetimes
-- as seen in the data `start` & `end` in `MembershipPeriod` are dates and not datetimes
+- as seen in the data `validUntil` & `validFrom` in `Membership` and `start` & `end` in `MembershipPeriod` are dates and not datetimes. Although timezones should probably be considered.
 
 ## 🗒️ Notes
 
@@ -154,6 +153,9 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - Installed [`@biomejs/biome`](https://www.npmjs.com/package/@biomejs/biome) for linting and formatting
 - API has no authentication, out of scope for this exercise
 - Added [`http-status-codes`](https://www.npmjs.com/package/http-status-codes) for better handling of HTTP status codes
+- Added [`date-fns`](https://www.npmjs.com/package/date-fns) for better date handling
+
+
 - `validUntil` calculation is unclear ... should `2023-01-01` + 12 months be `2024-01-01` (as in code) or `2023-12-31` (as in sample data)?
 - should `validUntil` and `validFrom` be inclusive or exclusive?
 - should `validUntil` and `validFrom` be dates or datetimes?

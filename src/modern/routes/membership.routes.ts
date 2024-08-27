@@ -6,6 +6,7 @@ import { JsonMembershipRepository } from "../domain/memberships/repositories/jso
 import type { IMembershipRepository } from "../domain/memberships/repositories/membership-repository";
 import { ListMemberships } from "../domain/memberships/usecases/list-memberships";
 import { CreateMembership } from "../domain/memberships/usecases/create-membership";
+import { ValidationError } from "../errors";
 
 const USER_ID = 2000;
 
@@ -32,14 +33,24 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 router.post("/", async (req: Request, res: Response) => {
-	const { periods, ...membership } = await createMembership.execute({
-		...req.body,
-		userId: USER_ID,
-	});
+	try {
+		const { periods, ...membership } = await createMembership.execute({
+			...req.body,
+			userId: USER_ID,
+		});
 
-	res
-		.status(StatusCodes.CREATED)
-		.json({ membership, membershipPeriods: periods });
+		res
+			.status(StatusCodes.CREATED)
+			.json({ membership, membershipPeriods: periods });
+	} catch (err: unknown) {
+		// should ideally be done in error handler middleware, but there is a weird bug with supertest: https://github.com/ladjs/supertest/issues/529
+		if (err instanceof ValidationError) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				message: err.message,
+			});
+		}
+		throw err;
+	}
 });
 
 export default router;

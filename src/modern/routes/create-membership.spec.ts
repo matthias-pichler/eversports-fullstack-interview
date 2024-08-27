@@ -1,8 +1,7 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import supertest from "supertest";
-// because of the javascript module, we need to use require to import the legacy routes
-const routes = require("./membership.routes");
+import routes from "./membership.routes";
 
 const app = express();
 app.use(express.json());
@@ -192,7 +191,7 @@ describe("create new membership", () => {
 					.expect(StatusCodes.CREATED);
 			});
 
-			it.failing("allows weekly billing", async () => {
+			it("allows weekly billing", async () => {
 				await request
 					.post("/")
 					.send({
@@ -227,7 +226,7 @@ describe("create new membership", () => {
 				},
 			);
 
-			it.failing("rejects monthly billing shorter than 6 months", async () => {
+			it("rejects monthly billing shorter than 6 months", async () => {
 				await request
 					.post("/")
 					.send({
@@ -261,23 +260,8 @@ describe("create new membership", () => {
 					});
 			});
 
-			it("allows yearly billing for 3 years", async () => {
-				await request
-					.post("/")
-					.send({
-						name: "Platinum Plan",
-						recurringPrice: 150.0,
-						validFrom: "2023-01-01",
-						state: "active",
-						paymentMethod: "credit card",
-						billingInterval: "yearly",
-						billingPeriods: 3,
-					})
-					.expect(StatusCodes.CREATED);
-			});
-
-			it.failing.each([4, 5, 9, 10])(
-				"allows yearly billing for 4-10 years",
+			it.each([3, 4, 5, 9, 10])(
+				"allows yearly billing for 3-10 years",
 				async (billingPeriods) => {
 					await request
 						.post("/")
@@ -294,7 +278,7 @@ describe("create new membership", () => {
 				},
 			);
 
-			it.failing("rejects yearly billing shorter than 3 years", async () => {
+			it("rejects yearly billing shorter than 3 years", async () => {
 				await request
 					.post("/")
 					.send({
@@ -378,32 +362,29 @@ describe("create new membership", () => {
 					});
 			});
 
-			it.failing(
-				"correctly rolls over dates to next month for weekly billing",
-				async () => {
-					const body = {
-						name: "Platinum Plan",
-						recurringPrice: 150.0,
-						validFrom: "2023-05-01",
-						state: "active",
-						paymentMethod: "credit card",
-						billingInterval: "weekly",
-						billingPeriods: 5,
-					};
+			it("correctly rolls over dates to next month for weekly billing", async () => {
+				const body = {
+					name: "Platinum Plan",
+					recurringPrice: 150.0,
+					validFrom: "2023-05-01",
+					state: "active",
+					paymentMethod: "credit card",
+					billingInterval: "weekly",
+					billingPeriods: 5,
+				};
 
-					await request
-						.post("/")
-						.send(body)
-						.expect(StatusCodes.CREATED)
-						.expect((res) => {
-							expect(res.body.membership).toEqual(
-								expect.objectContaining({
-									validUntil: "2023-06-05T00:00:00.000Z",
-								}),
-							);
-						});
-				},
-			);
+				await request
+					.post("/")
+					.send(body)
+					.expect(StatusCodes.CREATED)
+					.expect((res) => {
+						expect(res.body.membership).toEqual(
+							expect.objectContaining({
+								validUntil: "2023-06-05T00:00:00.000Z",
+							}),
+						);
+					});
+			});
 		});
 
 		describe("state", () => {
