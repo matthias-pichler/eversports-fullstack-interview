@@ -1,14 +1,14 @@
 import {
 	type BillingInterval,
+	type IMembership,
 	Membership,
 	type MembershipState,
 	type PaymentMethod,
-	type IMembership,
 } from "../entities/membership";
 import {
+	type IMembershipPeriod,
 	MembershipPeriod,
 	type MembershipPeriodState,
-	type IMembershipPeriod,
 } from "../entities/membership-period";
 import type { IMembershipRepository } from "./membership-repository";
 
