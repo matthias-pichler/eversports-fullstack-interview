@@ -141,6 +141,12 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - list memberships also returns `id`, `uuid`, `assignedBy` undocumented properties
 - `assignedBy` is not set in create membership
 - `billingInterval` in `Membership` can also be `weekly` but is not allowed in create membership
+- `billingPeriods` with a monthly interval is not correctly checked for the minimum of 6 months
+
+## 🤔 Assumptions
+
+- as seen in the data `validUntil` & `validFrom` in `Membership` are dates and not datetimes
+- as seen in the data `start` & `end` in `MembershipPeriod` are dates and not datetimes
 
 ## 🗒️ Notes
 
@@ -151,6 +157,7 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - `validUntil` calculation is unclear ... should `2023-01-01` + 12 months be `2024-01-01` (as in code) or `2023-12-31` (as in sample data)?
 - should `validUntil` and `validFrom` be inclusive or exclusive?
 - should `validUntil` and `validFrom` be dates or datetimes?
+- realistically input validation should be done using `zod` or json schema but I left it out for simplicity
 
 ## TODOs
 
