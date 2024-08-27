@@ -169,3 +169,4 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - Added [`http-status-codes`](https://www.npmjs.com/package/http-status-codes) for better handling of HTTP status codes
 - Added [`date-fns`](https://www.npmjs.com/package/date-fns) for better date handling
 - realistically input validation should be done using `zod` or json schema but I left it out for simplicity
+- a request response logger could be added for debugging
