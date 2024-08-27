@@ -5,6 +5,9 @@ import memberships from "../../data/memberships.json";
 import { JsonMembershipRepository } from "../domain/memberships/repositories/json-membership-repository";
 import type { IMembershipRepository } from "../domain/memberships/repositories/membership-repository";
 import { ListMemberships } from "../domain/memberships/usecases/list-memberships";
+import { CreateMembership } from "../domain/memberships/usecases/create-membership";
+
+const USER_ID = 2000;
 
 const router = express.Router();
 
@@ -14,10 +17,11 @@ const membershipRepository: IMembershipRepository =
 		membershipPeriods: membershipPeriods,
 	});
 
-router.get("/", async (req: Request, res: Response) => {
-	const useCase = new ListMemberships(membershipRepository);
+const listMemberships = new ListMemberships(membershipRepository);
+const createMembership = new CreateMembership(membershipRepository);
 
-	const memberships = await useCase.execute();
+router.get("/", async (req: Request, res: Response) => {
+	const memberships = await listMemberships.execute();
 
 	const result = memberships.map(({ periods, ...membership }) => ({
 		membership,
@@ -27,8 +31,15 @@ router.get("/", async (req: Request, res: Response) => {
 	res.status(StatusCodes.OK).json(result);
 });
 
-router.post("/", (req: Request, res: Response) => {
-	throw new Error("not implemented");
+router.post("/", async (req: Request, res: Response) => {
+	const { periods, ...membership } = await createMembership.execute({
+		...req.body,
+		userId: USER_ID,
+	});
+
+	res
+		.status(StatusCodes.CREATED)
+		.json({ membership, membershipPeriods: periods });
 });
 
 export default router;
