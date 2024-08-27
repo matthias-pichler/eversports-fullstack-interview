@@ -1,3 +1,4 @@
+import * as dfns from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 import { ValidationError } from "../../errors";
 import type { IMembership, MembershipState } from "../entities/membership";
@@ -60,19 +61,17 @@ export class CreateMembership {
 			"validFrom" | "billingInterval" | "billingPeriods"
 		>,
 	): Date => {
-		// I would have done this using date-fns but it behaves differently
-		const validUntil = new Date(input.validFrom);
-		if (input.billingInterval === "monthly") {
-			validUntil.setMonth(input.validFrom.getMonth() + input.billingPeriods);
-		} else if (input.billingInterval === "yearly") {
-			validUntil.setMonth(
-				input.validFrom.getMonth() + input.billingPeriods * 12,
-			);
-		} else if (input.billingInterval === "weekly") {
-			validUntil.setDate(input.validFrom.getDate() + input.billingPeriods * 7);
+		switch (input.billingInterval) {
+			case "weekly":
+				return dfns.addWeeks(input.validFrom, input.billingPeriods);
+			case "monthly":
+				return dfns.addMonths(input.validFrom, input.billingPeriods);
+			case "yearly":
+				return dfns.addYears(input.validFrom, input.billingPeriods);
+			default:
+				// same as legacy code
+				return input.validFrom;
 		}
-
-		return validUntil;
 	};
 
 	private generatePeriods = (
@@ -86,14 +85,14 @@ export class CreateMembership {
 
 		for (let i = 0; i < input.billingPeriods; i++) {
 			const validFrom = periodStart;
-			const validUntil = new Date(validFrom);
+			let validUntil = new Date(validFrom);
 
 			if (input.billingInterval === "monthly") {
-				validUntil.setMonth(validFrom.getMonth() + 1);
+				validUntil = dfns.addMonths(validFrom, 1);
 			} else if (input.billingInterval === "yearly") {
-				validUntil.setMonth(validFrom.getMonth() + 12);
+				validUntil = dfns.addYears(validFrom, 1);
 			} else if (input.billingInterval === "weekly") {
-				validUntil.setDate(validFrom.getDate() + 7);
+				validUntil = dfns.addWeeks(validFrom, 1);
 			}
 
 			const period: CreateMembershipPeriodInput = {
