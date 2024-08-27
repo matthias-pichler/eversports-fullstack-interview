@@ -158,6 +158,7 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - I assume that the `billingInterval: weekly` was previously accidentally forbidden. Allowing it in the new API adds new functionality and does not break existing functionality.
 - I assume that yearly memberships with a runtime of less than 3 years were previously accidentally allowed. The data did not show any such memberships. I assume the frontend already validates this so the application won't break.
 - Month increments don't simply increase the month by 1. I kept the same behavior as in the legacy code.
+- I assume property order in the JSON response does not matter in accordance with the JSON spec.
 
 ## 🗒️ Notes
 
