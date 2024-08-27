@@ -10,7 +10,10 @@ import {
 	MembershipPeriod,
 	type MembershipPeriodState,
 } from "../entities/membership-period";
-import type { IMembershipRepository } from "./membership-repository";
+import type {
+	CreateMembershipInput,
+	IMembershipRepository,
+} from "./membership-repository";
 import { formatISO } from "date-fns";
 
 /**
@@ -41,21 +44,27 @@ export class JsonMembershipRepository implements IMembershipRepository {
 	}
 
 	public createMembership = async (
-		input: Omit<IMembership, "id">,
+		input: CreateMembershipInput,
 	): Promise<IMembership> => {
 		const membershipId = this.memberships.length + 1;
 		const { periods, ...membership } = input;
 
-		const newMembership: JsonMembership = {
+		const jsonMembership: JsonMembership = {
 			...membership,
 			id: membershipId,
 			validFrom: formatISO(membership.validFrom, { representation: "date" }),
 			validUntil: formatISO(membership.validUntil, { representation: "date" }),
 		};
 
-		this.memberships.push(newMembership);
+		this.memberships.push(jsonMembership);
 
-		const newMembershipPeriods: JsonMembershipPeriod[] = periods.map(
+		const newPeriods: IMembershipPeriod[] = periods.map((period, i) => ({
+			...period,
+			id: this.membershipPeriods.length + i + 1,
+			membership: membershipId,
+		}));
+
+		const jsonMembershipPeriods: JsonMembershipPeriod[] = newPeriods.map(
 			(period) => ({
 				...period,
 				start: formatISO(period.start, { representation: "date" }),
@@ -63,11 +72,12 @@ export class JsonMembershipRepository implements IMembershipRepository {
 			}),
 		);
 
-		this.membershipPeriods.push(...newMembershipPeriods);
+		this.membershipPeriods.push(...jsonMembershipPeriods);
 
 		return new Membership({
 			...input,
 			id: membershipId,
+			periods: newPeriods,
 		});
 	};
 

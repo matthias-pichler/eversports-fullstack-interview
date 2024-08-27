@@ -1,7 +1,13 @@
-import type { Membership } from "../entities/membership";
+import type { IMembership, Membership } from "../entities/membership";
+import type { IMembershipPeriod } from "../entities/membership-period";
+
+export type CreateMembershipPeriodInput = Omit<IMembershipPeriod, "id" | "membership">;
+export interface CreateMembershipInput extends Omit<IMembership, "id" | "periods"> {
+	periods: CreateMembershipPeriodInput[];
+}
 
 export interface IMembershipRepository {
-	createMembership(membership: Omit<Membership, "id">): Promise<Membership>;
+	createMembership(input: CreateMembershipInput): Promise<Membership>;
 
 	listMemberships(): Promise<Membership[]>;
 }
