@@ -121,18 +121,33 @@ We believe that great developers are not bound to a specific technology set, but
 
 Best of luck and looking forward to what you are able to accomplish! 🙂
 
+## 🪲 Bugs
+
+In general to resolve API bugs I would proceed (roughly) as follows:
+
+1. check if un-allowed values already exist in the database (e.g. `billingInterval` with value `weekly` or `billingPeriods` with value `2 years`) ... maybe customers already rely on this behavior?
+
+1. check logs if requests with values that should be allowed are being sent and if customers are working around the issue (e.g. memberships with a 4 year period, splitting memberships, etc), check if support tickets have been opened
+
+1. check why these restrictions were put in place in the first place and if they are still valid
+
+1. check if a missing feature (e.g. periods in `GET /memberships`) is being relied on, to determine if it should be added or removed
+
+1. check with API consumers about usage patterns and if they are relying on undocumented behavior
+
+- `GET /memberships` does not return the periods of the memberships. Added a failing test for this.
+- README states `user` in `Membership`, data uses `userId`
+- `paymentMethod` in `Membership` can also be `null`
+- list memberships also returns `id`, `uuid`, `assignedBy` undocumented properties
+- `assignedBy` is not set in create membership
+- `billingInterval` in `Membership` can also be `weekly` but is not allowed in create membership
+
 ## 🗒️ Notes
 
 - Added Github actions to run tests on every push
 - Installed [`@biomejs/biome`](https://www.npmjs.com/package/@biomejs/biome) for linting and formatting
 - API has no authentication, out of scope for this exercise
 - Added [`http-status-codes`](https://www.npmjs.com/package/http-status-codes) for better handling of HTTP status codes
-- Discovered that the `GET /memberships` endpoint did not return the periods of the memberships. Added a failing test for this.
-- Discovered README states `user` in `Membership`, data uses `userId`
-- Discovered that `paymentMethod` in `Membership` can also be `null`
-- Discovered that list memberships also returns undocumented properties `id`, `uuid`, `assignedBy`
-- Discovered that `assignedBy` is not set in create membership
-- Discovered that create membership only allows `billingInterval` to be `monthly` or `yearly` but also uses `weekly` in the code
 - `validUntil` calculation is unclear ... should `2023-01-01` + 12 months be `2024-01-01` (as in code) or `2023-12-31` (as in sample data)?
 - should `validUntil` and `validFrom` be inclusive or exclusive?
 - should `validUntil` and `validFrom` be dates or datetimes?

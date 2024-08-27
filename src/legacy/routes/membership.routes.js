@@ -98,10 +98,10 @@ router.post("/", (req, res) => {
 		const period = {
 			id: i + 1,
 			uuid: uuidv4(),
-			membershipId: newMembership.id,
+			membershipId: newMembership.id, // this is different from data & README where it's called membership
 			start: validFrom,
 			end: validUntil,
-			state: "planned",
+			state: "planned", // periods are always planned?
 		};
 		membershipPeriods.push(period);
 		periodStart = validUntil;
