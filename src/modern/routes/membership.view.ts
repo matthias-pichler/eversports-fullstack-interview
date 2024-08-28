@@ -12,6 +12,8 @@ export class MembershipPeriodListEntry {
 	public toJSON() {
 		return {
 			...this.period,
+			membership: undefined,
+			membershipId: this.period.membership,
 			start: formatISO(this.period.start, { representation: "date" }),
 			end: formatISO(this.period.end, { representation: "date" }),
 		};

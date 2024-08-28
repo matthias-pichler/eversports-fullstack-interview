@@ -27,6 +27,16 @@ app.use("/", membershipRouter.router);
 const request = supertest(app);
 
 describe("create new membership", () => {
+	beforeAll(() => {
+		jest.useFakeTimers({
+			now: new Date("2024-05-01"),
+		});
+	});
+
+	afterAll(() => {
+		jest.useRealTimers();
+	});
+
 	describe("data validation", () => {
 		it("requires a non-empty name", async () => {
 			const body = {
@@ -501,5 +511,63 @@ describe("create new membership", () => {
 					expect(res.body.membershipPeriods).toHaveLength(6);
 				});
 		});
+	});
+
+	it("returns the expected response", async () => {
+		await request
+			.post("/")
+			.send({
+				name: "Platinum Plan",
+				recurringPrice: 150.0,
+				validFrom: "2023-05-01",
+				state: "active",
+				paymentMethod: "credit card",
+				billingInterval: "yearly",
+				billingPeriods: 3,
+			})
+			.expect(StatusCodes.CREATED)
+			.expect((res) => {
+				expect(res.body).toEqual({
+					membership: {
+						id: expect.any(Number),
+						uuid: expect.any(String),
+						name: "Platinum Plan",
+						recurringPrice: 150.0,
+						userId: 2000,
+						validFrom: "2023-05-01",
+						validUntil: "2026-05-01",
+						state: "active",
+						paymentMethod: "credit card",
+						billingInterval: "yearly",
+						billingPeriods: 3,
+					},
+					membershipPeriods: [
+						{
+							id: expect.any(Number),
+							uuid: expect.any(String),
+							membershipId: expect.any(Number),
+							start: "2023-05-01",
+							end: "2024-05-01",
+							state: "planned",
+						},
+						{
+							id: expect.any(Number),
+							uuid: expect.any(String),
+							membershipId: expect.any(Number),
+							start: "2024-05-01",
+							end: "2025-05-01",
+							state: "planned",
+						},
+						{
+							id: expect.any(Number),
+							uuid: expect.any(String),
+							membershipId: expect.any(Number),
+							start: "2025-05-01",
+							end: "2026-05-01",
+							state: "planned",
+						},
+					],
+				});
+			});
 	});
 });

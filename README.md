@@ -154,15 +154,17 @@ In general to resolve API bugs I would proceed (roughly) as follows:
 - All membership periods are created as "planned" even if they might lie in the past. Assuming that code here is correct.
 - I assume that the undocumented properties `id`, `uuid`, `assignedBy` have to be returned in the new API as well as they are in use by the frontend.
 - since the legacy API returned `userId` instead of `user` I assume that the new API should return `userId` as well because the frontend is already using it.
-- I assume that allowing yearly memberships with a runtime of 4-10 years (which were previously forbidden) adds new functionality and does not break existing functionality.
+- I assume that allowing yearly memberships with a runtime of 4-10 years (which were previously forbidden) adds new functionality and does not break existing functionality, i.e. no consumer relied on the error
 - I assume that the `billingInterval: weekly` was previously accidentally forbidden. Allowing it in the new API adds new functionality and does not break existing functionality.
 - I assume that yearly memberships with a runtime of less than 3 years were previously accidentally allowed. The data did not show any such memberships. I assume the frontend already validates this so the application won't break.
 - Month increments don't simply increase the month by 1. I kept the same behavior as in the legacy code.
 - I assume property order in the JSON response does not matter in accordance with the JSON spec.
+- I left the inconsistency in createMembership returning `membershipPeriods` and listMemberships returning `periods` as is.
+- I made `MembershipPeriod` show `membershipId` instead of `membership` in the API since this is what was used by createMembership and listMemberships did not return the periods.
 
 ## 🗒️ Notes
 
-- I went with a onion style architecture to show one way of structuring the code and separating concerns. Things like hexagonal architecture could also be used, but require more boilerplate code.
+- I went with a onion style architecture to show one way of structuring the code and separating concerns. Things like hexagonal architecture could also be used, but require more boilerplate code
 - Added Github actions to run tests, typecheck and linter on every push
 - Installed [`@biomejs/biome`](https://www.npmjs.com/package/@biomejs/biome) for linting and formatting
 - API has no authentication, out of scope for this exercise
